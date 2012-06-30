@@ -7,19 +7,21 @@ import Data.List
                )
 
 insertSort :: [Integer] → [Integer]
-insertSort = foldr insert [ ]
-
-insert :: Integer → [Integer] → [Integer]
-insert y ys = xs ++ [y] ++ zs
-     where (xs,zs) = partition (<y) ys
-
-
 selectSort :: [Integer] → [Integer]
+
+insertSort = foldr   insert [ ]
 selectSort = unfoldr select
 
-select :: [Integer] → Maybe (Integer,[Integer])
-select [ ] = Nothing
-select xs= Just (x,xs0)
-  where x   = minimum xs 
-        xs0 = delete x xs
+insert ::  Integer →         [Integer] → [Integer]
+select :: [Integer] → Maybe ( Integer  , [Integer] )
+
+insert y ys = xs ++ [y] ++ zs
+    where  {- || -}     {- || -}
+             (xs     ,     zs) = partition (<y) ys
+
+select []  = Nothing
+select xs  = Just (x,xs0)
+         where 
+       x   = minimum xs 
+       xs0 = delete x xs
 

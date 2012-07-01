@@ -33,6 +33,12 @@ bubbleSort :: Lf KList -> Gf SList
 bubbleSort = unfold bubble
      where          bubble = fold bub
 
+naiveInsertSort   = fold   nInsert
+    where nInsert = unfold nIns
+
+bubbleSort'      = unfold (  fold (fmap In  .  swap)   )
+naiveInsertSort' = fold   (unfold (swap . fmap insideO))
+
 
 -- |
 --
@@ -43,7 +49,7 @@ bubbleSort = unfold bubble
 
 nIns      ::  KList (Gf SList)         -> SList (KList (Gf SList))
 bub       ::  KList (SList (Lf KList)) -> SList (Lf KList)
-
+swap      ::  KList (SList      x    ) -> SList (KList     x     )
 
 --However, the (difunctor-reversed) signature has the identical shape to bub's:
 
@@ -68,7 +74,6 @@ bub       ::  KList (SList (Lf KList)) -> SList (Lf KList)
 -- nIns      ::  KList (Gf SList)         -> SList (KList (Gf SList))
 -- bubInv    ::  KList (Gf SList)         -> SList (KList (Gf SList))
 
-swap :: KList (SList x) -> SList (KList x)
 
 
 
@@ -87,4 +92,7 @@ swap (KCons a       (SNil     )   )     = SCons a (KNil)
 swap (KCons a       (SCons b x)   )
      | (<=) a              b            = SCons a (KCons b x)
      | otherwise                        = SCons b (KCons a x)
+
+
+
 

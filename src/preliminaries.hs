@@ -1,7 +1,6 @@
 {-# LANGUAGE UnicodeSyntax #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
-import Data.List (unfoldr)
 
 
 newtype Lf v = In   { insideI :: v (Lf v )}
@@ -18,14 +17,6 @@ newtype BBB  f g h = BBBO { outBBB :: f (BBB f g h, BBB g h f, BBB h f g) }
             {- OutO   =>    insideO   -}
             {- OutO a => |!| a |!| -}
 
--- ^
--- >>> :t fold (unfold (fmap insideO))
--- fold (unfold (fmap insideO)) :: Functor f => Lf f -> Gf f
-
--- ^
--- >>> :t fold (\_ -> OutO { insideO = undefined })
--- fold (\_ -> OutO { insideO = undefined }) :: Functor f => Lf f -> Gf f1
-
 
 outO = unfold (fmap insideO)
 -- ^
@@ -36,33 +27,6 @@ inO = fold (fmap In)
 -- ^
 -- >>> :t fold (fmap In)
 -- fold (fmap In) :: Functor f => Lf f -> f (Lf f)
-
--- ^
--- >>> :t (\c -> fold (unfold c))
--- (\c -> fold (unfold c))
---   :: (Functor x, Functor f) =>
---      (f (Gf x) -> x (f (Gf x))) -> Lf f -> Gf x
-
--- ^
--- >>> :t (\a -> unfold (fold a))
--- (\a -> unfold (fold a))
---   :: (Functor f, Functor x) =>
---      (f (x (Lf f)) -> x (Lf f)) -> Lf f -> Gf x
-
-
--- ^
--- >>> :t In . fmap (id) . insideI
--- In . fmap (id) . insideI :: Functor f => Lf f -> Lf f
-
--- ^
--- >>> :t (\f -> fmap (unfold f) . f)
--- (\f -> fmap (unfold f) . f)
---   :: Functor f => (a -> f a) -> a -> f (Gf f)
-
--- ^
--- >>> :t (\f -> f. fmap (fold f))
--- (\f -> f. fmap (fold f))
---   :: Functor f => (f b -> b) -> f (Lf f) -> b
 
 
 
@@ -142,20 +106,40 @@ main = undefined
 
 
 
+-- ^
+-- >>> :t fold (unfold (fmap insideO))
+-- fold (unfold (fmap insideO)) :: Functor x => Lf x -> Gf x
+
+-- ^
+-- >>> :t fold (\_ -> OutO { insideO = undefined })
+-- fold (\_ -> OutO { insideO = undefined })
+--   :: Functor f => Lf f -> Gf x
+
+-- ^
+-- >>> :t (\c -> fold (unfold c))
+-- (\c -> fold (unfold c))
+--   :: (Functor x, Functor f) =>
+--      (f (Gf x) -> x (f (Gf x))) -> Lf f -> Gf x
+
+-- ^
+-- >>> :t (\a -> unfold (fold a))
+-- (\a -> unfold (fold a))
+--   :: (Functor f, Functor x) =>
+--      (f (x (Lf f)) -> x (Lf f)) -> Lf f -> Gf x
 
 
--- example of doctest finding a change in code:
-$ doctest src/preliminaries.hs
-There are 9 tests, with 9 total interactions.
-### Failure in src/preliminaries.hs:22: expression `:t fold (unfold (fmap insideO))'
-expected: fold (unfold (fmap insideO)) :: Functor f => Lf f -> Gf f
- but got: fold (unfold (fmap insideO)) :: Functor x => Lf x -> Gf x
-### Failure in src/preliminaries.hs:26: expression `:t fold (\_ -> OutO { insideO = undefined })'
-expected: fold (\_ -> OutO { insideO = undefined }) :: Functor f => Lf f -> Gf f1
- but got: fold (\_ -> OutO { insideO = undefined })
-            :: Functor f => Lf f -> Gf x
-### Failure in src/preliminaries.hs:54: expression `:t In . fmap (id) . insideI'
-expected: In . fmap (id) . insideI :: Functor f => Lf f -> Lf f
- but got: In . fmap (id) . insideI :: Functor v => Lf v -> Lf v
-Examples: 9  Tried: 9  Errors: 0  Failures: 3
+-- ^
+-- >>> :t In . fmap (id) . insideI
+-- In . fmap (id) . insideI :: Functor v => Lf v -> Lf v
+
+-- ^
+-- >>> :t (\f -> fmap (unfold f) . f)
+-- (\f -> fmap (unfold f) . f)
+--   :: Functor f => (a -> f a) -> a -> f (Gf f)
+
+-- ^
+-- >>> :t (\f -> f. fmap (fold f))
+-- (\f -> f. fmap (fold f))
+--   :: Functor f => (f b -> b) -> f (Lf f) -> b
+
 

@@ -72,19 +72,16 @@ swap :: KList (SList x) -> SList (KList x)
 
 
 
-bub (KNil                         )     = SNil
-bub (KCons a        (SNil     )   )     = SCons a (In (KNil     ))
-bub (KCons a        (SCons b x)   )
-    | (<=) a               b            = SCons a (In (KCons b x))
-    | otherwise                         = SCons b (In (KCons a x))
-nIns (KNil                        )     = SNil
-nIns (KCons a (OutO (SNil     ) ) )     = SCons a     (KNil     )
-nIns (KCons a (OutO (SCons b x) ) )
-     | (<=) a              b            = SCons a     (KCons b x)
-     | otherwise                        = SCons b     (KCons a x)
-swap KNil                               = SNil
-swap (KCons a       (SNil     )   )     = SCons a (KNil)
-swap (KCons a       (SCons b x)   )
-     | (<=) a              b            = SCons a (KCons b x)
-     | otherwise                        = SCons b (KCons a x)
+bub (KNil                         )                                        = SNil
+bub (KCons a        (SNil     )   )                                        = SCons a (In (KNil     ))
+bub (KCons a        (SCons b x)   )     | (<=) a              b            = SCons a (In (KCons b x))
+                                        | otherwise                        = SCons b (In (KCons a x))
+nIns (KNil                        )                                        = SNil
+nIns (KCons a (OutO (SNil     ) ) )                                        = SCons a     (KNil     )
+nIns (KCons a (OutO (SCons b x) ) )     | (<=) a              b            = SCons a     (KCons b x)
+                                        | otherwise                        = SCons b     (KCons a x)
+swap KNil                                                                  = SNil
+swap (KCons a       (SNil     )   )                                        = SCons a (KNil)
+swap (KCons a       (SCons b x)   )     | (<=) a              b            = SCons a (KCons b x)
+                                        | otherwise                        = SCons b (KCons a x)
 

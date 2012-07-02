@@ -1,3 +1,4 @@
+module Pearl.SWB.Section03 where
 
 newtype Lf v = In   { insideI :: v (Lf v )}
 newtype Gf x = OutO { insideO :: x (Gf x )}
@@ -103,16 +104,16 @@ naiveInsertSort' = fold   (unfold (swap . fmap insideO))
 
 {- ||| 3.1 Algebra and Co-Algebra Homomorphisms -}
 
-...
+-- ...
 
 {- ||||   (1)      bubble . In =.= bub . fmap bubble -}
 
 
-...
+-- ...
 
 {- |||||  (catd)   {- TODO category diagram -}           -}
 
-...
+-- ...
 
 {- ||||   (1)      bubble . In =.= bub . fmap bubble                                                          -}
 {- |||||                                                           {- bub is replacable in fmap by In . swap -} -}

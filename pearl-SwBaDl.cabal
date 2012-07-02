@@ -16,7 +16,15 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 library
-  -- exposed-modules:     
+  exposed-modules:   
+                     Pearl.SWB.Section01
+                     Pearl.SWB.Section02
+                     Pearl.SWB.Section03
+                     Pearl.SWB.Section04
+                     Pearl.SWB.Section05
+                     Pearl.SWB.Section06
+                     Pearl.SWB.Section07
+
   -- other-modules:       
   build-depends:       base ==4.5.*
   hs-source-dirs:      src

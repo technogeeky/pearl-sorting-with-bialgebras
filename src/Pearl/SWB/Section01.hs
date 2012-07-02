@@ -1,5 +1,7 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
+module Pearl.SWB.Section01 where
+
 import Data.List 
                ( unfoldr   {-  unfoldr   ::        (b → Maybe (a,b)) → b → [a]         -}
                , partition {-  partition ::        (a -> Bool) -> [a] -> ([a], [a])    -}

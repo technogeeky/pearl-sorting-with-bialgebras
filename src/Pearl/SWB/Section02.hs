@@ -1,28 +1,29 @@
 {-# LANGUAGE UnicodeSyntax #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
-
+module Pearl.SWB.Section02 where
 
 newtype Lf v = In   { insideI :: v (Lf v )}
 newtype Gf x = OutO { insideO :: x (Gf x )}
 
-newtype Blah f g   = BlahO { outP :: f (Blah f g, Blah g f) }
+newtype LfG  v f m = BlahO { outLfG :: f (LfG f v m , LfG v f m,  LfG v m f) }
 newtype BBB  f g h = BBBO { outBBB :: f (BBB f g h, BBB g h f, BBB h f g) }
 
 
 -- pointfree:
-            {- In  =>       in       -}
+            {- In  =>       insideI  -}
             {- In a =>   |^| a |^|   -}
 -- pointfree:
-            {- OutO   =>    insideO   -}
-            {- OutO a => |!| a |!| -}
+            {- OutO   =>    insideO  -}
+            {- OutO a => |!| a |!|   -}
 
-
+outO :: Functor x => x (Gf x) -> Gf x
 outO = unfold (fmap insideO)
 -- ^
 -- >>> :t unfold (fmap insideO)
 -- unfold (fmap insideO) :: Functor x => x (Gf x) -> Gf x
 
+-- inO :: Functor x => x (Gf x) -> Gf x
 inO = fold (fmap In)
 -- ^
 -- >>> :t fold (fmap In)
@@ -55,11 +56,16 @@ antiunfold f = In   . fmap (antiunfold f) . f
 -- blah = foldr (fmap insideI)
 
 
-downcast :: (Functor v) => Gf v -> Lf v
-upcast   :: (Functor f) => Lf f -> Gf f
+downcast  :: (Functor v) => Gf v -> Lf v
+upcast    :: (Functor x) => Lf x -> Gf x
+westcast  :: (Functor x) => Lf x -> Gf x
+eastcast  :: (Functor v) => Gf v -> Lf v
 
 downcast  = In           . fmap downcast . insideO
-upcast    = fold (unfold ( fmap            insideO )) 
+westcast  = OutO         . fmap westcast . insideI
+
+upcast    = fold     (unfold     (fmap  insideO)) 
+eastcast  = antifold (antiunfold (fmap  insideI))
 
 -- > Then I stumbled over a blog entry of Shin-Cheng Mu [2] and from there
 -- > over an article of Wadler [3], where the least fixpoint is encoded as
@@ -93,7 +99,17 @@ upcast    = fold (unfold ( fmap            insideO ))
 --                           <Gf, out                  >
 
 
+step00 :: (Functor f, Functor x) => (f (  (Gf x)) -> x (f (Gf x) )) -> Lf f -> Gf x
+step10 :: (Functor x, Functor f) => (f (x (Lf f)) -> x (  (Lf f) )) -> Lf f -> Gf x
 
+
+step01 :: Functor x => (a -> x a     ) -> a -> Gf x
+step11 :: Functor f => (     f a -> a)      -> Lf f -> a
+
+step00 c = fold (unfold c)
+step01 c =      (unfold c)
+step10 a = unfold (fold a)
+step11 a =        (fold a)
 main = undefined
 
 

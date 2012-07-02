@@ -3,6 +3,7 @@ newtype Lf v = In   { insideI :: v (Lf v )}
 newtype Gf x = OutO { insideO :: x (Gf x )}
 
 
+
 data K = K
        deriving (Ord, Eq)
 
@@ -28,16 +29,6 @@ instance Functor SList where
      fmap f SNil = SNil
      fmap f (SCons k l) = SCons k (f l)
 
-bubbleSort :: Lf KList -> Gf SList
-
-bubbleSort = unfold bubble
-     where          bubble = fold bub
-
-naiveInsertSort   = fold   nInsert
-    where nInsert = unfold nIns
-
-bubbleSort'      = unfold (  fold (fmap In  .  swap)   )
-naiveInsertSort' = fold   (unfold (swap . fmap insideO))
 
 
 -- |
@@ -92,6 +83,51 @@ swap (KCons a       (SNil     )   )     = SCons a (KNil)
 swap (KCons a       (SCons b x)   )
      | (<=) a              b            = SCons a (KCons b x)
      | otherwise                        = SCons b (KCons a x)
+
+
+
+
+
+bubbleSort :: Lf KList -> Gf SList
+
+bubbleSort = unfold bubble
+     where          bubble = fold bub
+
+naiveInsertSort   = fold   nInsert
+    where nInsert = unfold nIns
+
+bubbleSort'      = unfold (  fold (fmap In  .  swap)   )
+naiveInsertSort' = fold   (unfold (swap . fmap insideO))
+
+
+
+{- ||| 3.1 Algebra and Co-Algebra Homomorphisms -}
+
+...
+
+{- ||||   (1)      bubble . In =.= bub . fmap bubble -}
+
+
+...
+
+{- |||||  (catd)   {- TODO category diagram -}           -}
+
+...
+
+{- ||||   (1)      bubble . In =.= bub . fmap bubble                                                          -}
+{- |||||                                                           {- bub is replacable in fmap by In . swap -} -}
+{- ||||   (2)      bubble . In =.= fmap In . swap . fmap bubble                                               -}
+
+
+{- |||||  (2.cat)      {- TODO category diagram -}             -}
+
+
+{- |||||  (2.cat2)      {- TODO category diagram -}             -}
+
+
+{- ||||   (3)      insideOut . naiveInsert = fmap naiveInsert . nIns                                                                -}
+{- |||||                                                             {- nIns is replacable (outside fmap) by swap . fmap insideO -} -}
+{- ||||   (2)      bubble . In =.= fmap nIns . swap . fmap insideO                                                                  -}
 
 
 
